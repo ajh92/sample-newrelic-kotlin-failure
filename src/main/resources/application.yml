@@ -1,0 +1,25 @@
+micronaut:
+  application:
+    name: sampleNewrelicKotlinFailure
+r2dbc:
+  datasources:
+    default:
+      dialect: POSTGRES
+      driver: pool
+      protocol: postgresql
+      # default COCKROACH_DB_URL to localhost but should be set to 'host.docker.internal' inside kube
+      # https://docs.docker.com/desktop/networking/#i-want-to-connect-from-a-container-to-a-service-on-the-host
+      url: r2dbc:postgresql://${COCKROACH_DB_URL:`localhost:26257`}/${COCKROACH_DB_NAME:thing_local}?reWriteBatchedInserts=true
+      username: root
+      password: ''
+      options:
+        sslMode: DISABLE
+flyway:
+  datasources:
+    default:
+      enabled: true
+      options:
+        schema: thing
+      url: jdbc:postgresql://${COCKROACH_DB_URL:`localhost:26257`}/${COCKROACH_DB_NAME:thing_local}?reWriteBatchedInserts=true
+      username: root
+      password: ''

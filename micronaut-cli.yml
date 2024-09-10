@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: sample.newrelic.kotlin.failure
+testFramework: junit
+sourceLanguage: kotlin
+buildTool: gradle_kotlin
+features: [app-name, data, data-r2dbc, gradle, h2, http-client-test, junit, kotlin, kotlin-application, ksp, logback, micronaut-aot, micronaut-build, netty-server, properties, r2dbc, readme, serialization-jackson, shade]
