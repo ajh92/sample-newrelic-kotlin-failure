@@ -28,13 +28,14 @@ dependencies {
     implementation("io.micronaut.flyway:micronaut-flyway")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("io.r2dbc:r2dbc-pool")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut.redis:micronaut-redis-lettuce")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("org.postgresql:r2dbc-postgresql")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.flywaydb:flyway-database-postgresql")
     runtimeOnly("org.yaml:snakeyaml")
-    testImplementation("io.micronaut:micronaut-http-client")
 }
 
 
