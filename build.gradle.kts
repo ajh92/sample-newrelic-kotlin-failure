@@ -1,10 +1,10 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.8.22"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.8.22"
-    id("com.google.devtools.ksp") version "1.8.22-1.0.11"
+    id("org.jetbrains.kotlin.jvm") version "1.9.23"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.9.23"
+    id("com.google.devtools.ksp") version "1.9.23-1.0.19"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.micronaut.application") version "4.0.2"
-    id("io.micronaut.aot") version "4.0.2"
+    id("io.micronaut.application") version "4.4.0"
+    id("io.micronaut.aot") version "4.4.0"
 }
 
 version = "0.1"
@@ -18,7 +18,7 @@ repositories {
 dependencies {
     ksp("io.micronaut.data:micronaut-data-processor")
     ksp("io.micronaut.serde:micronaut-serde-processor")
-    implementation(platform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.4"))
+    //implementation(platform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.9.0"))
     implementation("io.micronaut.data:micronaut-data-r2dbc")
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
@@ -43,7 +43,7 @@ application {
     mainClass.set("sample.newrelic.kotlin.failure.ApplicationKt")
 }
 java {
-    sourceCompatibility = JavaVersion.toVersion("17")
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 tasks {

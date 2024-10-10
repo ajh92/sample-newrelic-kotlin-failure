@@ -1,14 +1,22 @@
 package sample.newrelic.kotlin.failure
 
 import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 
 @Controller("thing")
 class ThingController(
     private val thingService: ThingService,
 ) {
-    @Post
-    suspend fun saveThing(thingVal: Int) {
-        thingService.makeAndSaveThing(thingVal)
+    @Post("save")
+    suspend fun saveThing(thingVal: Int): Boolean {
+        thingService.saveThing(thingVal)
+        return true
     }
+
+    @Get("asyncGet")
+    suspend fun asyncGet(): String = thingService.getBattleArmor()
+
+    @Get("synchronousGet")
+    fun synchronousGet(): String = thingService.getFastString()
 }

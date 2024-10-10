@@ -1,6 +1,10 @@
 micronaut:
   application:
     name: sampleNewrelicKotlinFailure
+  http:
+    services:
+      poke-api:
+        url: "https://pokeapi.co"
 r2dbc:
   datasources:
     default:
