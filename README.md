@@ -1,16 +1,20 @@
 ## sample-newrelic-kotlin-failure
 
-This is a Micronaut application using Kotlin that demonstrates a problem integrating newer versions of
-[newrelic-java-kotlin-coroutines](https://github.com/newrelic/newrelic-java-kotlin-coroutines) with the application.
+This is a Micronaut application using Kotlin that demonstrates a problem integrating with newer versions of
+[newrelic-java-kotlin-coroutines](https://github.com/newrelic/newrelic-java-kotlin-coroutines) and the latest Java
+agent.
 
-It appears that R2DBC doesn't play nicely with Kotlin.
+In what appears to be the fault of the kotlin-coroutines-instrumentation extension, it appears that R2DBC doesn't play 
+nicely with Kotlin.
 
-Note: In the code, you'll also see some samples I wrote involving the declarative client. This is a separate issue
-I am investigating involving New Relic not tracing suspending function entry points for the client correctly.
+In a separate issue, it also appears that starting with newrelic-java 8.14.0, we're seeing Unknown traces associated
+with certain controller entry points.
 
-To reproduce the R2DBC issue:
+---
 
-1. Download and unzip the newrelic agent.
+### To reproduce the R2DBC issue:
+
+1. Download and unzip the newrelic java agent.
    ```shell
    wget https://download.newrelic.com/newrelic/java-agent/newrelic-agent/8.15.0/newrelic-java.zip && unzip -j "newrelic-java.zip" "newrelic/newrelic.jar"
    ```
@@ -28,6 +32,38 @@ To reproduce the R2DBC issue:
    ```shell
    curl --location 'http://localhost:8080/thing/save' --header 'Content-Type: application/json' --data '{ "thingVal": 1 }'
    ```
+5. Review your application's distributed tracing in New Relic.
+   
+---
+
+### To reproduce the Unknown traces issue:
+
+1. Download and unzip a newrelic java agent with versions 8.14.0 or 8.15.0.
+   
+   **IMPORTANT NOTE**: This issue with _not_ happen on 8.13.0, so you can later test with that agent. 
+   ```shell
+   wget https://download.newrelic.com/newrelic/java-agent/newrelic-agent/8.14.0/newrelic-java.zip && unzip -j "newrelic-java.zip" "newrelic/newrelic.jar"
+   ``` 
+2. Add the following New Relic extensions to the extensions directory:
+   ```shell
+   mkdir extensions
+   wget https://github.com/newrelic/newrelic-java-micronaut-http/releases/download/v1.0.4/micronaut-http-instrumentation-v1.0.4.zip && unzip -j "micronaut-http-instrumentation-v1.0.4.zip" -d extensions
+   wget https://github.com/newrelic/newrelic-java-micronaut-core/releases/download/v1.1.3/micronaut-core-instrumentation-v1.1.3.zip && unzip -j "micronaut-core-instrumentation-v1.1.3.zip" -d extensions
+   wget https://github.com/newrelic/newrelic-java-kotlin-coroutines/releases/download/1.3/Kotlin-Coroutines_1.4.jar -P extensions
+   ```
+3. If you're using IntelliJ, run this application with javaagent set to your newrelic.jar. Also provide
+   NEW_RELIC_ACCOUNT_ID, NEW_RELIC_APP_NAME, NEW_RELIC_INSERT_KEY, and NEW_RELIC_LICENSE_KEY as environment variables
+   to hook in to your New Relic account.
+4. Run the basic POST endpoints in the controller a few times
+   ```shell
+   curl --location 'http://localhost:8080/thing/save' --header 'Content-Type: application/json' --data '{ "thingVal": 1 }'
+   curl --location 'http://localhost:8080/thing/asyncGet'
+   ```
+5. Review your application's distributed tracing in New Relic.
+
+---
+
+### Further details on R2DBC issue
 
 Example of a real stage application experiencing this issue: https://onenr.io/08jq2xpoxQl
 
@@ -160,3 +196,14 @@ New Relic Agent logs with error:
 2024-10-10T10:38:09,916-0500 [42060 81] com.newrelic ERROR: Tracer Debug: An error occurred calling Transaction.tracerFinished() for class reactor.netty.channel.ChannelOperationsHandler : java.lang.NullPointerException: Cannot invoke "com.newrelic.agent.Transaction.activityFailedOrIgnored(com.newrelic.agent.TransactionActivity, int)" because "this.transaction" is null : this Tracer = com.newrelic.agent.tracers.OtherRootTracer@720ae8f9
 2024-10-10T10:38:10,742-0500 [42060 81] com.newrelic ERROR: Tracer Debug: Inconsistent state! tracer (actual tracer popped off stack) != lastTracer (pointer to top of stack) for com.newrelic.agent.TransactionActivity@7fffffff (com.newrelic.agent.tracers.OtherRootTracer@5d693b50 != com.newrelic.agent.tracers.DefaultTracer@5d6d9454)
 ```
+
+---
+
+### Further details on the Unknown trace issue:
+
+For New Relic engineers/support agents, here is a link to some distributed tracing for a sample app that shows the 
+problem: https://onenr.io/0gR7VlD4xwo 
+
+As an aside, these traces don't include always the Redis/database calls either. Once this Unknown trace issue is
+resolved with the most recent versions of the NR Java agent, figuring out the root cause of *that* will be my next goal.
+I suspect that this is likely a Micronaut/Micronaut extensions problem, though.
