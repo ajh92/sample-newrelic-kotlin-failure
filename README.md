@@ -8,7 +8,9 @@ This is a Micronaut application using Kotlin that demonstrates problems integrat
 
 With the latest Java agent, 8.20.0, we are still seeing Unknown transactions appearing. These seem to be related to netty 
 and requests using the Micronaut HTTP client. 
-This occurs when adding the below to `newrelic.yml`, or omitting the `netty` section altogether.
+This occurs when adding the below to `newrelic.yml` as noted
+[here](https://docs.newrelic.com/docs/release-notes/agent-release-notes/java-release-notes/java-agent-8200/#fixes), 
+or omitting the `netty` section altogether.
 ```
   netty:
     http2:
@@ -24,7 +26,10 @@ Replacing this with `return new NoOpTracer();` fixes the NPE issue, but I am not
 
 ---
 ### Test Environment: 
-```sh
+```shell
+$ uname -a
+Darwin macbookpro.lan 24.4.0 Darwin Kernel Version 24.4.0: Fri Apr 11 18:33:47 PDT 2025; root:xnu-11417.101.15~117/RELEASE_ARM64_T6000 arm64
+
 $ sw_vers
 ProductName:		macOS
 ProductVersion:		15.4.1
@@ -232,7 +237,7 @@ with `return new NoOpTracer();`, but I am not sure the implications of this.
 
 Removing the `Kotlin-Coroutines-Suspends` extension also prevents this issue.
     ```shell
-    $ rm ./extensions/Kotlin-Coroutines-Suspends.jar
+    $ rm./extensions/Kotlin-Coroutines-Suspends.jar
     ```
 However, it is unclear to me if we still properly trace transactions that hit a suspension point in this case.
 
