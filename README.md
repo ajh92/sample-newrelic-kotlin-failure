@@ -239,7 +239,7 @@ with `return new NoOpTracer();`, but I am not sure the implications of this.
 
 Removing the `Kotlin-Coroutines-Suspends` extension also prevents this issue.
 However, it is unclear to me if we still properly trace transactions that hit a suspension point in this case.
-    ```shell
+    ```
     $ rm ./extensions/Kotlin-Coroutines-Suspends.jar
     ```
     
