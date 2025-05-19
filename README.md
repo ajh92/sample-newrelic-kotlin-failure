@@ -235,10 +235,12 @@ Setting `-Dnewrelic.config.class_transformer.clear_return_stacks=true` (noted [h
 Note: This does not occur when replacing [Line 20 of SuspendTracerFactory](https://github.com/newrelic/newrelic-java-kotlin-coroutines/blob/f168d295d51a708dbb38617d308b0ba1cddb4911/Kotlin-Coroutines-Suspends/src/main/java/com/newrelic/instrumentation/kotlin/coroutines/tracing/SuspendTracerFactory.java#L20).
 with `return new NoOpTracer();`, but I am not sure the implications of this.
 
+---
+
 Removing the `Kotlin-Coroutines-Suspends` extension also prevents this issue.
 However, it is unclear to me if we still properly trace transactions that hit a suspension point in this case.
     ```shell
-    $ rm./extensions/Kotlin-Coroutines-Suspends.jar
+    $ rm ./extensions/Kotlin-Coroutines-Suspends.jar
     ```
     
 ---
