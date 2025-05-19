@@ -91,7 +91,7 @@ OpenJDK 64-Bit Server VM Corretto-21.0.7.6.1 (build 21.0.7+6-LTS, mixed mode, sh
     Example stacktrace:
     ```
     14:50:48.425 [reactor-tcp-nio-8] ERROR i.m.http.server.RouteExecutor - Unexpected error occurred: Cannot invoke "com.newrelic.agent.Transaction.finishSegment(com.newrelic.agent.Segment, java.lang.Throwable, com.newrelic.agent.tracers.Tracer, String)" because the return value of "com.newrelic.agent.TransactionActivity.getTransaction()" is null
-java.lang.NullPointerException: Cannot invoke "com.newrelic.agent.Transaction.finishSegment(com.newrelic.agent.Segment, java.lang.Throwable, com.newrelic.agent.tracers.Tracer, String)" because the return value of "com.newrelic.agent.TransactionActivity.getTransaction()" is null
+    java.lang.NullPointerException: Cannot invoke "com.newrelic.agent.Transaction.finishSegment(com.newrelic.agent.Segment, java.lang.Throwable, com.newrelic.agent.tracers.Tracer, String)" because the return value of "com.newrelic.agent.TransactionActivity.getTransaction()" is null
         at com.newrelic.agent.Segment$1.run(Segment.java:203)
         at com.newrelic.agent.ExpirationService.expireSegmentInline(ExpirationService.java:47)
         at com.newrelic.agent.Segment.finish(Segment.java:215)
@@ -230,16 +230,16 @@ java.lang.NullPointerException: Cannot invoke "com.newrelic.agent.Transaction.fi
         at java.base/java.lang.Thread.run(Thread.java:1583)
     ```
 
-Setting `-Dnewrelic.config.class_transformer.clear_return_stacks=true` does not appear to make a difference.
+Setting `-Dnewrelic.config.class_transformer.clear_return_stacks=true` (noted [here](https://github.com/newrelic/newrelic-java-agent/pull/2307)) does not appear to make a difference.
 
 Note: This does not occur when replacing [Line 20 of SuspendTracerFactory](https://github.com/newrelic/newrelic-java-kotlin-coroutines/blob/f168d295d51a708dbb38617d308b0ba1cddb4911/Kotlin-Coroutines-Suspends/src/main/java/com/newrelic/instrumentation/kotlin/coroutines/tracing/SuspendTracerFactory.java#L20).
 with `return new NoOpTracer();`, but I am not sure the implications of this.
 
 Removing the `Kotlin-Coroutines-Suspends` extension also prevents this issue.
+However, it is unclear to me if we still properly trace transactions that hit a suspension point in this case.
     ```shell
     $ rm./extensions/Kotlin-Coroutines-Suspends.jar
     ```
-However, it is unclear to me if we still properly trace transactions that hit a suspension point in this case.
-
+    
 ---
 For New Relic engineers/support agents, here is a [link](https://onenr.io/0BR6OkmD2jO) to an APM service that demonstrates these issues.
