@@ -441,9 +441,6 @@ common: &default_settings
     # Default is false.
     name_actuator_endpoints: false
 
-    netty_instrumentation:
-      enabled: false
-
   # Real-time profiling using Java Flight Recorder (JFR).
   # This feature reports dimensional metrics to the ingest endpoint configured by
   # metric_ingest_uri and events to the ingest endpoint configured by event_ingest_uri.
