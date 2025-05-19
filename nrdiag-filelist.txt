@@ -1,0 +1,45 @@
+List of files in zipfile
+Stored file name:Base/Config/newrelic.yml
+Original path:/Users/ahill/repos/sample-newrelic-kotlin-failure/newrelic.yml
+
+Stored file name:Base/Config/gradle-wrapper.properties
+Original path:/Users/ahill/repos/sample-newrelic-kotlin-failure/gradle/wrapper/gradle-wrapper.properties
+
+Stored file name:Base/Config/build.gradle.kts
+Original path:/Users/ahill/repos/sample-newrelic-kotlin-failure/build.gradle.kts
+
+Stored file name:Base/Log/newrelic_agent.log
+Original path:/Users/ahill/repos/sample-newrelic-kotlin-failure/logs/newrelic_agent.log
+
+Stored file name:Base/Containers/docker-info.json
+Original path:docker-info.json
+
+Stored file name:K8s/Resources/k8sDeployment.txt
+Original path:k8sDeployment.txt
+
+Stored file name:K8s/AgentControl/helm-controller.log
+Original path:helm-controller.log
+
+Stored file name:K8s/AgentControl/agent-control.log
+Original path:agent-control.log
+
+Stored file name:K8s/Resources/k8sPods.txt
+Original path:k8sPods.txt
+
+Stored file name:K8s/Resources/k8sConfigMaps.txt
+Original path:k8sConfigMaps.txt
+
+Stored file name:K8s/Env/kubectlVersion.txt
+Original path:kubectlVersion.txt
+
+Stored file name:K8s/Resources/k8sDaemonset.txt
+Original path:k8sDaemonset.txt
+
+Stored file name:K8s/AgentControl/source-controller.log
+Original path:source-controller.log
+
+Stored file name:nrdiag-output.json
+Original path:nrdiag-output.json
+
+Stored file name:nrdiag-filelist.txt
+Original path:nrdiag-filelist.txt

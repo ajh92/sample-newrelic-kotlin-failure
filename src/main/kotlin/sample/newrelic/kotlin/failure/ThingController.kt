@@ -18,5 +18,8 @@ class ThingController(
     suspend fun asyncGet(): String = thingService.getBattleArmor()
 
     @Get("synchronousGet")
-    fun synchronousGet(): String = thingService.getFastString()
+    fun synchronousGet(): String = thingService.getSlowString()
+
+    @Get("asyncDbGet")
+    suspend fun asyncDbGet(): List<Thing> = thingService.getAllThingsFromDb()
 }

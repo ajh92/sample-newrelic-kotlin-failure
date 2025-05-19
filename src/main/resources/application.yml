@@ -5,38 +5,38 @@ micronaut:
     services:
       poke-api:
         url: "https://pokeapi.co"
+#  metrics:
+#    enabled: true
+#    export:
+#      otlp:
+#        enabled: true
+#        url: https://otlp.nr-data.net:4318/v1/metrics
+#        aggregationTemporality: delta
+#        headers: api-key=${NEW_RELIC_LICENSE_KEY}
+#    binders:
+#      r2dbc:
+#        observation:
+#          enabled: true
 r2dbc:
   datasources:
     default:
-      dialect: POSTGRES
-      driver: pool
-      protocol: postgresql
-      # default COCKROACH_DB_URL to localhost but should be set to 'host.docker.internal' inside kube
-      # https://docs.docker.com/desktop/networking/#i-want-to-connect-from-a-container-to-a-service-on-the-host
-      url: r2dbc:postgresql://${COCKROACH_DB_URL:`localhost:26257`}/${COCKROACH_DB_NAME:thing_local}?reWriteBatchedInserts=true
-      username: root
-      password: ''
-      options:
-        sslMode: DISABLE
-flyway:
-  datasources:
-    default:
-      enabled: true
-      options:
-        schema: thing
-      url: jdbc:postgresql://${COCKROACH_DB_URL:`localhost:26257`}/${COCKROACH_DB_NAME:thing_local}?reWriteBatchedInserts=true
-      username: root
-      password: ''
-redis:
-  uri: "redis://localhost/1" #this is the only way to set up uri's properly with redis-lettuce
-  host: localhost
-  port: 6379
-  secret: ''
-  #There is currently a Micronaut Redis bug that multiplies your value set by 1000. https://github.com/micronaut-projects/micronaut-redis/issues/474
-  #86s is the workaround. 86s converts to 86000s, which is roughly 24 hours.
-  caches:
-    pokemon:
-      charset: 'UTF-8'
-      expire-after-access: 86s
-      expire-after-write: 86s
-      value-serializer: io.micronaut.jackson.serialize.JacksonObjectSerializer
+      url: r2dbc:postgresql://${PGUSER:postgres}@${PGHOST:localhost}:${PGPORT:54333}/${PGDATABASE:postgres}
+      password: ${PGPASSWORD:password}
+#otel:
+#  service:
+#    name: sample-newrelic-kotlin-failure-ajh
+#  traces:
+#    exporter: otlp
+#    exclusions: /health
+#  metrics:
+#    default_histogram_aggregation: BASE2_EXPONENTIAL_BUCKET_HISTOGRAM
+#    exporter: otlp
+#  logs:
+#    exporter: otlp
+#  exporter:
+#    otlp:
+#      endpoint: https://otlp.nr-data.net
+#      headers: api-key=${NEW_RELIC_LICENSE_KEY}
+#      compression: gzip
+#      protocol: http/protobuf
+#      metrics_temporality_preference: delta
