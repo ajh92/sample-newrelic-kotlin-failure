@@ -21,8 +21,11 @@ or omitting the `netty` section altogether.
 In a separate issue, we see `NullPointerException`s when including the `Kotlin-Coroutines-Suspends.jar` extension and
 accessing an R2DBC database.
 
+<del>
 This appears to be related to the `null` return on [Line 20 of SuspendTracerFactory](https://github.com/newrelic/newrelic-java-kotlin-coroutines/blob/f168d295d51a708dbb38617d308b0ba1cddb4911/Kotlin-Coroutines-Suspends/src/main/java/com/newrelic/instrumentation/kotlin/coroutines/tracing/SuspendTracerFactory.java#L20).
 Replacing this with `return new NoOpTracer();` fixes the NPE issue, but I am not sure what further implications doing so might have.
+</del>
+This seems to have been a red herring. The error still occurs when there are concurrent requests and `Kotlin-Coroutines-Suspends.jar` is present in the `extensions` directory.
 
 ---
 ### Test Environment: 
@@ -232,9 +235,12 @@ OpenJDK 64-Bit Server VM Corretto-21.0.7.6.1 (build 21.0.7+6-LTS, mixed mode, sh
 
 Setting `-Dnewrelic.config.class_transformer.clear_return_stacks=true` (noted [here](https://github.com/newrelic/newrelic-java-agent/pull/2307)) does not appear to make a difference.
 
+<del>
 Note: This does not occur when replacing [Line 20 of SuspendTracerFactory](https://github.com/newrelic/newrelic-java-kotlin-coroutines/blob/f168d295d51a708dbb38617d308b0ba1cddb4911/Kotlin-Coroutines-Suspends/src/main/java/com/newrelic/instrumentation/kotlin/coroutines/tracing/SuspendTracerFactory.java#L20).
 with `return new NoOpTracer();`, but I am not sure the implications of this.
+</del>
 
+This seems to have been a red herring. The error still occurs when there are concurrent requests and `Kotlin-Coroutines-Suspends.jar` is present in the `extensions` directory.
 ---
 
 Removing the `Kotlin-Coroutines-Suspends` extension also prevents this issue.
