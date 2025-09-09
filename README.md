@@ -18,23 +18,17 @@ Darwin macbookpro.lan 24.4.0 Darwin Kernel Version 24.4.0: Fri Apr 11 18:33:47 P
 
 $ sw_vers
 ProductName:		macOS
-ProductVersion:		15.4.1
-BuildVersion:		24E263
+ProductVersion:		15.6.1
+BuildVersion:		24G90
 
 $ java --version
-openjdk 21.0.7 2025-04-15 LTS
-OpenJDK Runtime Environment Corretto-21.0.7.6.1 (build 21.0.7+6-LTS)
-OpenJDK 64-Bit Server VM Corretto-21.0.7.6.1 (build 21.0.7+6-LTS, mixed mode, sharing)
+openjdk 21.0.8 2025-07-15 LTS
+OpenJDK Runtime Environment Corretto-21.0.8.9.1 (build 21.0.8+9-LTS)
+OpenJDK 64-Bit Server VM Corretto-21.0.8.9.1 (build 21.0.8+9-LTS, mixed mode, sharing)
 
 ```
 
----
-### New Issue: java.lang.UnsupportedOperationException: third-party implementation of CancellableContinuation is not supported
-1. 
-
----
-
-### In all cases:
+### Steps to Reproduce
 1. Ensure the `NEW_RELIC_LICENSE_KEY` environment variable is set and exported with a valid license key
 1. Set and export the `NEW_RELIC_APP_NAME` with an appropriate value
 1. Start supporting infrastructure using Docker Compose
