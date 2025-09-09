@@ -43,7 +43,10 @@ OpenJDK 64-Bit Server VM Corretto-21.0.8.9.1 (build 21.0.8+9-LTS, mixed mode, sh
     ```shell
     $ ./gradlew addCoroutineInstrumentation
     ```
-
+1. Start the application with the NewRelic Java Agent
+    ```shell
+    $ ./gradlew run -PjvmArgs="-Dnewrelic.config.class_transformer.clear_return_stacks=true -javaagent:$(pwd)/newrelic.jar"
+    ```
 1. Send requests to `http://localhost:8080/thing/save` (e.g. using [hey](https://github.com/rakyll/hey))
     ```shell
     $ hey -n 1000 -c 50 -m POST -H "Content-Type: application/json" -d '{"thingVal": 1}' http://localhost:8080/thing/save 
