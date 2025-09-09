@@ -22,4 +22,7 @@ class ThingController(
 
     @Get("asyncDbGet")
     suspend fun asyncDbGet(): List<Thing> = thingService.getAllThingsFromDb()
+
+    @Get(value = "asyncDbGetOne")
+    suspend fun asyncDbGetOne(): Thing? = thingService.getOneThingFromDb()
 }

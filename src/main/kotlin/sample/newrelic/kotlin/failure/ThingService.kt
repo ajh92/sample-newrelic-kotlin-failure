@@ -30,4 +30,11 @@ open class ThingService(
         delay(1000)
         return things
     }
+
+    suspend fun getOneThingFromDb(): Thing? {
+        delay(1000)
+        val thing = thingRepo.findTop1OrderById()
+        delay(1000)
+        return thing
+    }
 }

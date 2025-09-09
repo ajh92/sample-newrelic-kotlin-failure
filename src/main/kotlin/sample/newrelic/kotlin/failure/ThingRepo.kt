@@ -6,4 +6,6 @@ import io.micronaut.data.repository.kotlin.CoroutineCrudRepository
 import java.util.UUID
 
 @R2dbcRepository(dialect = Dialect.POSTGRES)
-interface ThingRepo : CoroutineCrudRepository<Thing, UUID>
+interface ThingRepo : CoroutineCrudRepository<Thing, UUID>{
+    suspend fun findTop1OrderById(): Thing?
+}

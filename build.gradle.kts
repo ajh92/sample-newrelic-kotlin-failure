@@ -32,6 +32,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:1.9.0")
 
+    implementation("io.r2dbc:r2dbc-pool")
+
     runtimeOnly(mn.logback.classic)
     runtimeOnly(mn.slf4j.jul.to.slf4j)
     runtimeOnly(mn.snakeyaml)
@@ -93,7 +95,7 @@ micronaut {
 tasks.register<Download>("downloadJavaAgent") {
     group = "NewRelic JARs"
     description = "Download NewRelic Java Agent"
-    src("https://download.newrelic.com/newrelic/java-agent/newrelic-agent/8.20.0/newrelic-java.zip")
+    src("https://download.newrelic.com/newrelic/java-agent/newrelic-agent/8.24.0/newrelic-java.zip")
     dest(
         File.createTempFile("nragent", ".zip", temporaryDir),
     )
@@ -123,7 +125,7 @@ tasks.register<Copy>("addAgent") {
 tasks.register<Download>("downloadCoroutineInstrumentation") {
     group = "NewRelic JARs"
     description = "Download NewRelic Java Agent"
-    src("https://github.com/newrelic/newrelic-java-kotlin-coroutines/releases/download/v1.0.7/kotlin-coroutines-instrumentation-v1.0.7.zip")
+    src("https://github.com/newrelic/newrelic-java-kotlin-coroutines/releases/download/v1.0.8/kotlin-coroutines-instrumentation-v1.0.8.zip")
     dest(
         File.createTempFile("nragent", ".zip", temporaryDir),
     )
@@ -149,68 +151,3 @@ tasks.register<Copy>("addCoroutineInstrumentation") {
     from(jar)
     into(File(project.rootDir, "extensions"))
 }
-
-tasks.register<Download>("downloadMicronautHttpInstrumentation") {
-    group = "NewRelic JARs"
-    description = "Download NewRelic Java Agent"
-    src("https://github.com/newrelic/newrelic-java-micronaut-http/releases/download/v1.1.4/micronaut-http-instrumentation-v1.1.4.zip")
-    dest(
-        File.createTempFile("nragent", ".zip", temporaryDir),
-    )
-    overwrite(true)
-    quiet(false)
-}
-
-tasks.register<Download>("downloadMicronautCoreInstrumentation") {
-    group = "NewRelic JARs"
-    description = "Download NewRelic Java Agent"
-    src("https://github.com/newrelic/newrelic-java-micronaut-core/releases/download/v1.1.4/micronaut-core-instrumentation-v1.1.4.zip")
-    dest(
-        File.createTempFile("nragent", ".zip", temporaryDir),
-    )
-    overwrite(true)
-    quiet(false)
-}
-
-tasks.register<Copy>("addMicronautInstrumentation") {
-    group = "NewRelic JARs"
-    description = "Copy NewRelic Java Agent JAR to project directory"
-
-    val downloadedHttpFileProvider = tasks.named<Download>("downloadMicronautHttpInstrumentation").map { it.dest }
-
-    val httpJar =
-        zipTree(downloadedHttpFileProvider).apply {
-            include("**/*.jar")
-            eachFile {
-                relativePath = RelativePath.parse(true, name)
-            }
-            includeEmptyDirs = false
-        }
-
-    val downloadedCoreFileProvider = tasks.named<Download>("downloadMicronautCoreInstrumentation").map { it.dest }
-
-    val coreJar =
-        zipTree(downloadedCoreFileProvider).apply {
-            include("**/*.jar")
-            eachFile {
-                relativePath = RelativePath.parse(true, name)
-            }
-            includeEmptyDirs = false
-        }
-
-    from(httpJar, coreJar)
-    into(File(project.rootDir, "extensions"))
-}
-
-// 5. (Optional) Register a convenience task to run both download and unzip
-
-/*
-tasks.register(mainTaskName) {
-    group = "Custom Setup"
-    description = "Downloads and unzips the archive to the project root."
-    dependsOn(tasks.named(unzipTaskName))
-    doLast {
-        println("Setup from ZIP completed.")
-    }
-}
-*/

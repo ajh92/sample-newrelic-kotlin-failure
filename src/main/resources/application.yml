@@ -20,7 +20,7 @@ micronaut:
 r2dbc:
   datasources:
     default:
-      url: r2dbc:postgresql://${PGUSER:postgres}@${PGHOST:localhost}:${PGPORT:54333}/${PGDATABASE:postgres}
+      url: r2dbc:pool:postgresql://${PGUSER:postgres}@${PGHOST:localhost}:${PGPORT:54333}/${PGDATABASE:postgres}
       password: ${PGPASSWORD:password}
 #otel:
 #  service:
