@@ -43,6 +43,10 @@ OpenJDK 64-Bit Server VM Corretto-21.0.8.9.1 (build 21.0.8+9-LTS, mixed mode, sh
     ```shell
     $ ./gradlew addCoroutineInstrumentation
     ```
+1. Add the Additional Micronaut Instrumentation extension JARs
+    ```shell
+    $ ./gradlew addMicronautInstrumentation
+    ```
 1. Start the application with the NewRelic Java Agent
     ```shell
     $ ./gradlew run -PjvmArgs="-Dnewrelic.config.class_transformer.clear_return_stacks=true -javaagent:$(pwd)/newrelic.jar"
@@ -55,64 +59,4 @@ OpenJDK 64-Bit Server VM Corretto-21.0.8.9.1 (build 21.0.8+9-LTS, mixed mode, sh
     ```shell
     $  hey -n 1000 -c 1000 http://localhost:8080/thing/asyncDbGetOne
    ```
-1. Observe Error
-```
-[default-nioEventLoopGroup-1-17] ERROR i.m.http.server.RouteExecutor - Unexpected error occurred: third-party implementation of CancellableContinuation is not supported
-java.lang.UnsupportedOperationException: third-party implementation of CancellableContinuation is not supported
-        at kotlinx.coroutines.CancellableContinuationKt.invokeOnCancellation(CancellableContinuation.kt:240)
-        at kotlinx.coroutines.CancellableContinuationKt.disposeOnCancellation(CancellableContinuation.kt:417)
-        at kotlinx.coroutines.EventLoopImplBase.scheduleResumeAfterDelay(EventLoop.common.kt:238)
-        at kotlinx.coroutines.DelayKt.delay(Delay.kt:126)
-        at sample.newrelic.kotlin.failure.ThingService.getOneThingFromDb(ThingService.kt:35)
-        at sample.newrelic.kotlin.failure.ThingController.asyncDbGetOne(ThingController.kt:27)
-        at sample.newrelic.kotlin.failure.$ThingController$Definition$Exec.dispatch(Unknown Source)
-        at io.micronaut.context.AbstractExecutableMethodsDefinition$DispatchedExecutableMethod.invokeUnsafe(AbstractExecutableMethodsDefinition.java:461)
-        at io.micronaut.context.DefaultBeanContext$BeanContextUnsafeExecutionHandle.invokeUnsafe(DefaultBeanContext.java:4350)
-        at io.micronaut.web.router.AbstractRouteMatch.execute(AbstractRouteMatch.java:237)
-        at io.micronaut.web.router.DefaultUriRouteMatch.execute(DefaultUriRouteMatch.java:38)
-        at io.micronaut.http.server.RouteExecutor.executeRouteAndConvertBody(RouteExecutor.java:498)
-        at io.micronaut.http.server.RouteExecutor.lambda$callRoute$7(RouteExecutor.java:482)
-        at reactor.core.publisher.MonoDeferContextual.subscribe(MonoDeferContextual.java:47)
-        at reactor.core.publisher.InternalMonoOperator.subscribe(InternalMonoOperator.java:76)
-        at io.micronaut.http.reactive.execution.ReactorExecutionFlowImpl.onComplete(ReactorExecutionFlowImpl.java:89)
-        at io.micronaut.http.server.netty.NettyRequestLifecycle.handleNormal(NettyRequestLifecycle.java:98)
-        at io.micronaut.http.server.netty.RoutingInBoundHandler.accept(RoutingInBoundHandler.java:235)
-        at io.micronaut.http.server.netty.websocket.NettyServerWebSocketUpgradeHandler.accept(NettyServerWebSocketUpgradeHandler.java:156)
-        at io.micronaut.http.server.netty.handler.PipeliningServerHandler$MessageInboundHandler.read(PipeliningServerHandler.java:415)
-        at io.micronaut.http.server.netty.handler.PipeliningServerHandler.channelRead(PipeliningServerHandler.java:221)
-        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
-        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
-        at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
-        at io.netty.channel.ChannelInboundHandlerAdapter.channelRead(ChannelInboundHandlerAdapter.java:93)
-        at io.netty.handler.codec.http.websocketx.extensions.WebSocketServerExtensionHandler.onHttpRequestChannelRead(WebSocketServerExtensionHandler.java:158)
-        at io.netty.handler.codec.http.websocketx.extensions.WebSocketServerExtensionHandler.channelRead(WebSocketServerExtensionHandler.java:82)
-        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
-        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
-        at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
-        at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436)
-        at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
-        at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
-        at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251)
-        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
-        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
-        at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
-        at io.netty.handler.timeout.IdleStateHandler.channelRead(IdleStateHandler.java:289)
-        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
-        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
-        at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
-        at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1407)
-        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
-        at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
-        at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:918)
-        at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
-        at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
-        at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
-        at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
-        at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
-        at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:994)
-        at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
-        at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
-        at java.base/java.lang.Thread.run(Thread.java:1583)
-```
-
-Setting `-Dnewrelic.config.class_transformer.clear_return_stacks=true` (noted [here](https://github.com/newrelic/newrelic-java-agent/pull/2307)) does not appear to make a difference.
+1. No Errors!

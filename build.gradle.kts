@@ -151,3 +151,33 @@ tasks.register<Copy>("addCoroutineInstrumentation") {
     from(jar)
     into(File(project.rootDir, "extensions"))
 }
+
+tasks.register<Download>("downloadMicronautAdditionalInstrumentation") {
+    group = "NewRelic JARs"
+    description = "Download NewRelic Java Agent"
+    src("https://github.com/newrelic-experimental/newrelic-java-micronaut-additional/releases/download/v1.0.0/micronaut-additional-instrumentation-v1.0.0.zip")
+    dest(
+        File.createTempFile("nragent", ".zip", temporaryDir),
+    )
+    overwrite(true)
+    quiet(false)
+}
+
+tasks.register<Copy>("addMicronautInstrumentation") {
+    group = "NewRelic JARs"
+    description = "Copy NewRelic Java Agent JAR to project directory"
+
+    val downloadedHttpFileProvider = tasks.named<Download>("downloadMicronautAdditionalInstrumentation").map { it.dest }
+
+    val additionalJar =
+        zipTree(downloadedHttpFileProvider).apply {
+            include("**/micronaut-aop-4.0.0.jar", "**/micronaut-data-tx-4.0.0.jar")
+            eachFile {
+                relativePath = RelativePath.parse(true, name)
+            }
+            includeEmptyDirs = false
+        }
+
+    from(additionalJar)
+    into(File(project.rootDir, "extensions"))
+}
