@@ -95,7 +95,7 @@ micronaut {
 tasks.register<Download>("downloadJavaAgent") {
     group = "NewRelic JARs"
     description = "Download NewRelic Java Agent"
-    src("https://download.newrelic.com/newrelic/java-agent/newrelic-agent/8.24.0/newrelic-java.zip")
+    src("https://download.newrelic.com/newrelic/java-agent/newrelic-agent/8.25.1/newrelic-java.zip")
     dest(
         File.createTempFile("nragent", ".zip", temporaryDir),
     )
@@ -120,36 +120,6 @@ tasks.register<Copy>("addAgent") {
 
     from(jar)
     into(project.rootDir) // Extracts to the root of your project
-}
-
-tasks.register<Download>("downloadCoroutineInstrumentation") {
-    group = "NewRelic JARs"
-    description = "Download NewRelic Java Agent"
-    src("https://github.com/newrelic/newrelic-java-kotlin-coroutines/releases/download/v1.0.8/kotlin-coroutines-instrumentation-v1.0.8.zip")
-    dest(
-        File.createTempFile("nragent", ".zip", temporaryDir),
-    )
-    overwrite(true)
-    quiet(false)
-}
-
-tasks.register<Copy>("addCoroutineInstrumentation") {
-    group = "NewRelic JARs"
-    description = "Copy NewRelic Java Agent JAR to project directory"
-
-    val downloadedFileProvider = tasks.named<Download>("downloadCoroutineInstrumentation").map { it.dest }
-
-    val jar =
-        zipTree(downloadedFileProvider).apply {
-            include("**/Kotlin-Coroutines_1.9.jar", "**/Kotlin-Coroutines-Suspends.jar")
-            eachFile {
-                relativePath = RelativePath.parse(true, name)
-            }
-            includeEmptyDirs = false
-        }
-
-    from(jar)
-    into(File(project.rootDir, "extensions"))
 }
 
 tasks.register<Download>("downloadMicronautAdditionalInstrumentation") {

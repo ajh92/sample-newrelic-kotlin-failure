@@ -192,7 +192,6 @@ common: &default_settings
     # not be sent to New Relic.
     #exclude:
 
-
     # Defines which sets of http attributes the agent will send: standard, legacy or both (default).
     # Having the agent send both sets will increase ingestion.
     # Having the agent send only legacy may impact current or future functionality.
@@ -409,7 +408,10 @@ common: &default_settings
 
     # This instrumentation reports metrics for resultset operations.
     com.newrelic.instrumentation.jdbc-resultset:
-      enabled: false
+      enabled: true
+
+    com.newrelic.instrumentation.kotlin-coroutines:
+      enabled: true
 
     # Classes loaded by classloaders in this list will not be instrumented.
     # This is a useful optimization for runtimes which use classloaders to
