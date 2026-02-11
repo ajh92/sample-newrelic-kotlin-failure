@@ -13,13 +13,13 @@ and third-party implementations are [specifically checked for and rejected](http
 ---
 ### Test Environment: 
 ```shell
-$ uname -a
-Darwin macbookpro.lan 24.4.0 Darwin Kernel Version 24.4.0: Fri Apr 11 18:33:47 PDT 2025; root:xnu-11417.101.15~117/RELEASE_ARM64_T6000 arm64
+$uname -a
+Darwin AUS-LR96N9QTVG.local 25.2.0 Darwin Kernel Version 25.2.0: Tue Nov 18 21:09:40 PST 2025; root:xnu-12377.61.12~1/RELEASE_ARM64_T6000 arm64
 
 $ sw_vers
 ProductName:		macOS
-ProductVersion:		15.6.1
-BuildVersion:		24G90
+ProductVersion:		26.2
+BuildVersion:		25C56
 
 $ java --version
 openjdk 21.0.8 2025-07-15 LTS
@@ -39,9 +39,7 @@ OpenJDK 64-Bit Server VM Corretto-21.0.8.9.1 (build 21.0.8+9-LTS, mixed mode, sh
     ```shell
     $ ./gradlew addAgent
     ```
-1. Add the Kotlin Coroutine Instrumentation extension JARs
-    ```shell
-    $ ./gradlew addCoroutineInstrumentation
+
     ```
 1. Add the Additional Micronaut Instrumentation extension JARs
     ```shell
@@ -49,14 +47,14 @@ OpenJDK 64-Bit Server VM Corretto-21.0.8.9.1 (build 21.0.8+9-LTS, mixed mode, sh
     ```
 1. Start the application with the NewRelic Java Agent
     ```shell
-    $ ./gradlew run -PjvmArgs="-Dnewrelic.config.class_transformer.clear_return_stacks=true -javaagent:$(pwd)/newrelic.jar"
+    $ ./gradlew run -PjvmArgs="-javaagent:$(pwd)/newrelic.jar"
     ```
 1. Send requests to `http://localhost:8080/thing/save` (e.g. using [hey](https://github.com/rakyll/hey))
     ```shell
     $ hey -n 1000 -c 50 -m POST -H "Content-Type: application/json" -d '{"thingVal": 1}' http://localhost:8080/thing/save 
    ```
-1. Send requests to `http://localhost:8080/thing/asyncDbGetOne` (e.g. using [hey](https://github.com/rakyll/hey))
+1. Send requests to `http://localhost:8080/thing/asyncDbLaunch` (e.g. using [hey](https://github.com/rakyll/hey))
     ```shell
-    $  hey -n 1000 -c 1000 http://localhost:8080/thing/asyncDbGetOne
+    $ hey -n 100000 -c 100 http://localhost:8080/thing/asyncDbLaunch
    ```
-1. No Errors!
+1. "Java" timing is reported under Web Transactions Time on the Summary page, with a far longer timing than the slowest transaction shown under the Transactions page / response time.
