@@ -47,7 +47,7 @@ OpenJDK 64-Bit Server VM Corretto-21.0.8.9.1 (build 21.0.8+9-LTS, mixed mode, sh
     ```
 1. Start the application with the NewRelic Java Agent
     ```shell
-    $ ./gradlew run -PjvmArgs="-javaagent:$(pwd)/newrelic.jar"
+    $ ./gradlew run -PjvmArgs="-javaagent:$(pwd)/newrelic.jar -Dnewrelic.config.class_transformer.clear_return_stacks=true"
     ```
 1. Send requests to `http://localhost:8080/thing/save` (e.g. using [hey](https://github.com/rakyll/hey))
     ```shell
@@ -55,6 +55,8 @@ OpenJDK 64-Bit Server VM Corretto-21.0.8.9.1 (build 21.0.8+9-LTS, mixed mode, sh
    ```
 1. Send requests to `http://localhost:8080/thing/asyncDbLaunch` (e.g. using [hey](https://github.com/rakyll/hey))
     ```shell
-    $ hey -n 100000 -c 100 http://localhost:8080/thing/asyncDbLaunch
+    $ hey -n 10000 -c 50 http://localhost:8080/thing/asyncDbLaunch
    ```
-1. "Java" timing is reported under Web Transactions Time on the Summary page, with a far longer timing than the slowest transaction shown under the Transactions page / response time.
+1. "Java" timing reported under Web Transactions Time on the Summary page, with a far longer timing than the slowest transaction shown under the Transactions page / response time.
+
+Note: There appears to be some 
