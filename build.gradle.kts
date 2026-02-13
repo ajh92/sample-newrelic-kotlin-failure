@@ -95,7 +95,7 @@ micronaut {
 tasks.register<Download>("downloadJavaAgent") {
     group = "NewRelic JARs"
     description = "Download NewRelic Java Agent"
-    src("https://download.newrelic.com/newrelic/java-agent/newrelic-agent/8.25.1/newrelic-java.zip")
+    src("https://download.newrelic.com/newrelic/java-agent/newrelic-agent/9.1.0/newrelic-java.zip")
     dest(
         File.createTempFile("nragent", ".zip", temporaryDir),
     )
